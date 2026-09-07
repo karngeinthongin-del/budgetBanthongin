@@ -124,7 +124,12 @@
           งบตั้งต้นประจำปี
         </button>
 
-        <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-indigo-300">ความปลอดภัย</div>
+        <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-indigo-300">ความปลอดภัย & ผู้ใช้งาน</div>
+
+        <button onclick="openUsersManagementModal(); closeSidebarIfMobile();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left text-white hover:bg-indigo-800 transition font-medium">
+          <svg class="w-4 h-4 text-teal-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          จัดการผู้ใช้งานระบบ
+        </button>
 
         <button onclick="openChangePasswordModal(); closeSidebarIfMobile();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left text-white hover:bg-indigo-800 transition font-medium">
           <svg class="w-4 h-4 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
@@ -136,7 +141,7 @@
         <div class="flex items-center justify-between text-xs">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span class="text-indigo-200">เจ้าหน้าที่การเงิน</span>
+            <span id="currentLoggedUserText" class="text-indigo-200 truncate max-w-[110px]">ผู้ใช้งาน</span>
           </div>
           <button onclick="handleLogout()" class="flex items-center gap-1 px-2.5 py-1 bg-rose-600/80 hover:bg-rose-600 text-white rounded-lg transition" title="ออกจากระบบ">
             ออก
@@ -280,7 +285,7 @@
                   </div>
                   <div>
                     <label class="block text-[11px] font-medium text-slate-600 mb-0.5">จำนวนเงิน (บาท)</label>
-                    <input type="number" id="expAmount" step="0.01" min="0.01" placeholder="0.00" required class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none text-right">
+                    <input type="number" id="expAmount" step="0.01" min="0.01" placeholder="0.00" required class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none text-right font-semibold">
                   </div>
                 </div>
 
@@ -344,7 +349,7 @@
                   </div>
                   <div>
                     <label class="block text-[11px] font-medium text-slate-600 mb-0.5">จำนวนเงินรับ (บาท)</label>
-                    <input type="number" id="inflowAmount" step="0.01" min="0.01" placeholder="0.00" required class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none text-right">
+                    <input type="number" id="inflowAmount" step="0.01" min="0.01" placeholder="0.00" required class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none text-right font-semibold">
                   </div>
                 </div>
 
@@ -379,6 +384,81 @@
         </div>
 
       </main>
+    </div>
+  </div>
+
+  <div id="usersManagementModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-3 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div class="flex items-center gap-2">
+          <div class="p-1.5 bg-indigo-100 text-indigo-700 rounded-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-800">จัดการผู้ใช้งานระบบ (User Management)</h3>
+            <p class="text-xs text-slate-400">เพิ่ม/ลบ ผู้ใช้งาน และกำหนดสิทธิ์การเข้าใช้งานระบบ</p>
+          </div>
+        </div>
+        <button onclick="document.getElementById('usersManagementModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
+      </div>
+
+      <form id="addUserForm" onsubmit="handleAddNewUser(event)" class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2.5 text-xs">
+        <div class="font-bold text-indigo-700 flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          เพิ่มผู้ใช้งานใหม่
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-600 mb-0.5">ชื่อ-นามสกุล / ตำแหน่ง</label>
+            <input type="text" id="newFullName" placeholder="เช่น ครูสมศรี การเงิน" required class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-slate-600 mb-0.5">บทบาท/หน้าที่</label>
+            <select id="newRole" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg focus:outline-none">
+              <option value="เจ้าหน้าที่การเงิน">เจ้าหน้าที่การเงิน</option>
+              <option value="เจ้าหน้าที่พัสดุ">เจ้าหน้าที่พัสดุ</option>
+              <option value="ครูผู้รับผิดชอบโครงการ">ครูผู้รับผิดชอบโครงการ</option>
+              <option value="ผู้บริหาร/ผู้อำนวยการ">ผู้บริหาร/ผู้อำนวยการ</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-600 mb-0.5">ชื่อผู้ใช้งาน (Username)</label>
+            <input type="text" id="newUsername" placeholder="ภาษาอังกฤษหรือตัวเลข" required class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-slate-600 mb-0.5">รหัสผ่าน (Password)</label>
+            <input type="password" id="newUserPassword" placeholder="อย่างน้อย 4 ตัวอักษร" required class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg focus:outline-none">
+          </div>
+        </div>
+
+        <div class="text-right pt-1">
+          <button type="submit" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow">
+            + บันทึกผู้ใช้งาน
+          </button>
+        </div>
+      </form>
+
+      <div class="flex-1 overflow-y-auto border border-slate-200 rounded-xl">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="bg-slate-100 border-b border-slate-200 text-slate-700 font-semibold">
+              <th class="py-2 px-3">ชื่อ-สกุล</th>
+              <th class="py-2 px-3">Username</th>
+              <th class="py-2 px-3">บทบาท</th>
+              <th class="py-2 px-3 text-center">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="usersListTableBody" class="divide-y divide-slate-100"></tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-end pt-2 border-t">
+        <button onclick="document.getElementById('usersManagementModal').classList.add('hidden')" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg">ปิด</button>
+      </div>
     </div>
   </div>
 
@@ -573,14 +653,24 @@
 
   <script>
     const AUTH_KEY = 'banthongin_auth_status';
-    const PASS_KEY = 'banthongin_custom_password';
-    const DEFAULT_USER = 'admin';
-    const DEFAULT_PASS = '123456';
+    const LOGGED_USER_KEY = 'banthongin_logged_username';
+    const USERS_STORAGE_KEY = 'banthongin_users_list';
+
+    // รายชื่อผู้ใช้เริ่มต้น
+    const DEFAULT_USERS = [
+      { username: 'admin', password: 'password', fullName: 'ผู้ดูแลระบบ', role: 'ผู้บริหาร/ผู้อำนวยการ' },
+      { username: 'finance', password: 'password', fullName: 'เจ้าหน้าที่การเงิน', role: 'เจ้าหน้าที่การเงิน' }
+    ];
 
     let currentMainView = 'DASHBOARD';
 
-    function getStoredPassword() {
-      return localStorage.getItem(PASS_KEY) || DEFAULT_PASS;
+    function getUsersList() {
+      const stored = localStorage.getItem(USERS_STORAGE_KEY);
+      return stored ? JSON.parse(stored) : DEFAULT_USERS;
+    }
+
+    function saveUsersList(users) {
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
     }
 
     function checkAuth() {
@@ -588,6 +678,13 @@
       if (isAuthenticated) {
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('mainApp').classList.remove('hidden');
+        
+        const loggedUser = sessionStorage.getItem(LOGGED_USER_KEY) || 'admin';
+        const users = getUsersList();
+        const userObj = users.find(u => u.username === loggedUser);
+        const displayName = userObj ? userObj.fullName : loggedUser;
+        document.getElementById('currentLoggedUserText').textContent = displayName;
+
         initApp();
       } else {
         document.getElementById('loginScreen').classList.remove('hidden');
@@ -601,8 +698,12 @@
       const p = document.getElementById('loginPassword').value.trim();
       const errBox = document.getElementById('loginError');
 
-      if (u === DEFAULT_USER && p === getStoredPassword()) {
+      const users = getUsersList();
+      const matched = users.find(user => user.username.toLowerCase() === u.toLowerCase() && user.password === p);
+
+      if (matched) {
         sessionStorage.setItem(AUTH_KEY, 'true');
+        sessionStorage.setItem(LOGGED_USER_KEY, matched.username);
         errBox.classList.add('hidden');
         document.getElementById('loginUsername').value = '';
         document.getElementById('loginPassword').value = '';
@@ -615,7 +716,73 @@
     function handleLogout() {
       if (confirm("ต้องการออกจากระบบใช่หรือไม่?")) {
         sessionStorage.removeItem(AUTH_KEY);
+        sessionStorage.removeItem(LOGGED_USER_KEY);
         checkAuth();
+      }
+    }
+
+    // ================= USER MANAGEMENT LOGIC =================
+    function openUsersManagementModal() {
+      renderUsersTable();
+      document.getElementById('usersManagementModal').classList.remove('hidden');
+    }
+
+    function renderUsersTable() {
+      const users = getUsersList();
+      const tbody = document.getElementById('usersListTableBody');
+      tbody.innerHTML = users.map(user => `
+        <tr class="hover:bg-slate-50 border-b">
+          <td class="py-2.5 px-3 font-medium text-slate-800">${user.fullName}</td>
+          <td class="py-2.5 px-3 text-indigo-600 font-mono">${user.username}</td>
+          <td class="py-2.5 px-3 text-slate-500">${user.role}</td>
+          <td class="py-2.5 px-3 text-center">
+            ${user.username.toLowerCase() === 'admin' 
+              ? '<span class="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded">หลัก</span>' 
+              : `<button onclick="deleteUser('${user.username}')" class="text-rose-500 hover:text-rose-700 font-bold p-1">ลบ</button>`}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function handleAddNewUser(e) {
+      e.preventDefault();
+      const fullName = document.getElementById('newFullName').value.trim();
+      const username = document.getElementById('newUsername').value.trim();
+      const password = document.getElementById('newUserPassword').value.trim();
+      const role = document.getElementById('newRole').value;
+
+      if (password.length < 4) {
+        alert("รหัสผ่านต้องมีความยาวอย่างน้อย 4 ตัวอักษร");
+        return;
+      }
+
+      const users = getUsersList();
+      if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        alert("ชื่อผู้ใช้งาน (Username) นี้มีอยู่ในระบบแล้ว กรุณาใช้ชื่ออื่น");
+        return;
+      }
+
+      users.push({ username, password, fullName, role });
+      saveUsersList(users);
+
+      // เพิ่มเข้าในรายชื่อครูผู้กรอกข้อมูลอัตโนมัติหากยังไม่มี
+      if (!teachers.includes(fullName)) {
+        teachers.push(fullName);
+        localStorage.setItem('budget_teachers', JSON.stringify(teachers));
+        populateDropdowns();
+      }
+
+      document.getElementById('addUserForm').reset();
+      renderUsersTable();
+      alert("เพิ่มผู้ใช้งานใหม่เรียบร้อยแล้ว!");
+    }
+
+    function deleteUser(username) {
+      if (confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบผู้ใช้งาน "${username}"?`)) {
+        let users = getUsersList();
+        users = users.filter(u => u.username !== username);
+        saveUsersList(users);
+        renderUsersTable();
       }
     }
 
@@ -635,7 +802,11 @@
       const conf = document.getElementById('confirmNewPasswordInput').value.trim();
       const errDiv = document.getElementById('changePasswordError');
 
-      if (curr !== getStoredPassword()) {
+      const loggedUser = sessionStorage.getItem(LOGGED_USER_KEY) || 'admin';
+      const users = getUsersList();
+      const userIndex = users.findIndex(u => u.username === loggedUser);
+
+      if (userIndex === -1 || users[userIndex].password !== curr) {
         errDiv.textContent = 'รหัสผ่านปัจจุบันไม่ถูกต้อง';
         errDiv.classList.remove('hidden');
         return;
@@ -651,7 +822,9 @@
         return;
       }
 
-      localStorage.setItem(PASS_KEY, newP);
+      users[userIndex].password = newP;
+      saveUsersList(users);
+
       alert('เปลี่ยนรหัสผ่านสำเร็จเรียบร้อยแล้ว!');
       document.getElementById('changePasswordModal').classList.add('hidden');
     }
@@ -988,7 +1161,7 @@
       `;
     }
 
-    // ================= ฟังก์ชันรายงานสรุป =================
+    // ================= REPORT SYSTEM FUNCTIONS =================
     const THAI_MONTHS = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
     function openReportModal() {
@@ -1249,6 +1422,7 @@
       const budgetData = labels.map(c => catBudgets[c] || 0);
       const spentData = labels.map(c => catSpent[c] || 0);
 
+      // Bar Chart
       const ctxBar = document.getElementById('budgetChart')?.getContext('2d');
       if (ctxBar) {
         if (chartInstance) chartInstance.destroy();
@@ -1287,6 +1461,7 @@
         });
       }
 
+      // Donut Chart
       const ctxDonut = document.getElementById('expenseDonutChart')?.getContext('2d');
       if (ctxDonut) {
         if (donutChartInstance) donutChartInstance.destroy();
@@ -1311,6 +1486,7 @@
         });
       }
 
+      // Line Chart
       const ctxLine = document.getElementById('trendLineChart')?.getContext('2d');
       if (ctxLine) {
         if (lineChartInstance) lineChartInstance.destroy();
