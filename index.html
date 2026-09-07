@@ -123,6 +123,13 @@
           <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           งบตั้งต้นประจำปี
         </button>
+
+        <div class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-indigo-300">ความปลอดภัย</div>
+
+        <button onclick="openChangePasswordModal(); closeSidebarIfMobile();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-left text-white hover:bg-indigo-800 transition font-medium">
+          <svg class="w-4 h-4 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+          เปลี่ยนรหัสผ่าน
+        </button>
       </nav>
 
       <div class="p-3 border-t border-indigo-800 bg-indigo-950/50">
@@ -287,9 +294,15 @@
                   <select id="expProject" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none"></select>
                 </div>
 
-                <div>
-                  <label class="block text-[11px] font-medium text-slate-600 mb-0.5">ผู้รับผิดชอบ</label>
-                  <select id="expResponsible" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none"></select>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-[11px] font-medium text-slate-600 mb-0.5">ผู้รับผิดชอบโครงการ</label>
+                    <select id="expResponsible" class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none"></select>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-medium text-indigo-700 font-semibold mb-0.5">ผู้บันทึกข้อมูล</label>
+                    <select id="expRecordedBy" class="w-full px-2.5 py-1.5 text-xs border border-indigo-300 bg-indigo-50/40 rounded-lg focus:outline-none"></select>
+                  </div>
                 </div>
 
                 <div>
@@ -341,6 +354,11 @@
                 </div>
 
                 <div>
+                  <label class="block text-[11px] font-medium text-slate-600 mb-0.5">ผู้บันทึกข้อมูล</label>
+                  <select id="inflowRecordedBy" class="w-full px-2.5 py-1.5 text-xs border border-emerald-300 bg-emerald-50/40 rounded-lg focus:outline-none"></select>
+                </div>
+
+                <div>
                   <label class="block text-[11px] font-medium text-slate-600 mb-0.5">รายการ / ที่มาของเงิน</label>
                   <input type="text" id="inflowTitle" placeholder="เช่น เงินอุดหนุนรายหัว งวดที่ 1" required class="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none">
                 </div>
@@ -361,6 +379,42 @@
         </div>
 
       </main>
+    </div>
+  </div>
+
+  <div id="changePasswordModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+          เปลี่ยนรหัสผ่านผู้ใช้งาน
+        </h3>
+        <button onclick="document.getElementById('changePasswordModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
+      </div>
+
+      <form id="changePasswordForm" onsubmit="handleChangePassword(event)" class="space-y-3 text-xs">
+        <div id="changePasswordError" class="hidden p-2.5 bg-rose-50 border border-rose-200 text-rose-600 rounded-lg text-center font-medium"></div>
+
+        <div>
+          <label class="block font-medium text-slate-700 mb-1">รหัสผ่านปัจจุบัน</label>
+          <input type="password" id="currentPasswordInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-700 mb-1">รหัสผ่านใหม่</label>
+          <input type="password" id="newPasswordInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-700 mb-1">ยืนยันรหัสผ่านใหม่</label>
+          <input type="password" id="confirmNewPasswordInput" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2 border-t">
+          <button type="button" onclick="document.getElementById('changePasswordModal').classList.add('hidden')" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg">ยกเลิก</button>
+          <button type="submit" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow">บันทึกรหัสผ่าน</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -519,10 +573,15 @@
 
   <script>
     const AUTH_KEY = 'banthongin_auth_status';
+    const PASS_KEY = 'banthongin_custom_password';
     const DEFAULT_USER = 'admin';
     const DEFAULT_PASS = '123456';
 
     let currentMainView = 'DASHBOARD';
+
+    function getStoredPassword() {
+      return localStorage.getItem(PASS_KEY) || DEFAULT_PASS;
+    }
 
     function checkAuth() {
       const isAuthenticated = sessionStorage.getItem(AUTH_KEY) === 'true';
@@ -542,7 +601,7 @@
       const p = document.getElementById('loginPassword').value.trim();
       const errBox = document.getElementById('loginError');
 
-      if (u === DEFAULT_USER && p === DEFAULT_PASS) {
+      if (u === DEFAULT_USER && p === getStoredPassword()) {
         sessionStorage.setItem(AUTH_KEY, 'true');
         errBox.classList.add('hidden');
         document.getElementById('loginUsername').value = '';
@@ -558,6 +617,43 @@
         sessionStorage.removeItem(AUTH_KEY);
         checkAuth();
       }
+    }
+
+    // ================= CHANGE PASSWORD LOGIC =================
+    function openChangePasswordModal() {
+      document.getElementById('currentPasswordInput').value = '';
+      document.getElementById('newPasswordInput').value = '';
+      document.getElementById('confirmNewPasswordInput').value = '';
+      document.getElementById('changePasswordError').classList.add('hidden');
+      document.getElementById('changePasswordModal').classList.remove('hidden');
+    }
+
+    function handleChangePassword(e) {
+      e.preventDefault();
+      const curr = document.getElementById('currentPasswordInput').value.trim();
+      const newP = document.getElementById('newPasswordInput').value.trim();
+      const conf = document.getElementById('confirmNewPasswordInput').value.trim();
+      const errDiv = document.getElementById('changePasswordError');
+
+      if (curr !== getStoredPassword()) {
+        errDiv.textContent = 'รหัสผ่านปัจจุบันไม่ถูกต้อง';
+        errDiv.classList.remove('hidden');
+        return;
+      }
+      if (newP.length < 4) {
+        errDiv.textContent = 'รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 4 ตัวอักษร';
+        errDiv.classList.remove('hidden');
+        return;
+      }
+      if (newP !== conf) {
+        errDiv.textContent = 'รหัสผ่านใหม่ทั้งสองช่องไม่ตรงกัน';
+        errDiv.classList.remove('hidden');
+        return;
+      }
+
+      localStorage.setItem(PASS_KEY, newP);
+      alert('เปลี่ยนรหัสผ่านสำเร็จเรียบร้อยแล้ว!');
+      document.getElementById('changePasswordModal').classList.add('hidden');
     }
 
     function switchMainView(view) {
@@ -631,12 +727,12 @@
     ];
 
     const DEFAULT_TRANSACTIONS = [
-      { id: 1, date: "2025-10-10", docType: "บค", docNo: "01/69", category: "ค่าอุปกรณ์การเรียน", project: "โครงการสนับสนุนค่าใช้จ่ายในการจัดการศึกษาขั้นพื้นฐาน (เรียนฟรี 15 ปี)", responsible: "ครูปฐมวัย", title: "จัดซื้ออุปกรณ์การเรียน ปฐมวัย", amount: 220, note: "เบิกจ่ายงวด 1" },
-      { id: 2, date: "2025-10-22", docType: "บค", docNo: "02/69", category: "ค่ากิจกรรมพัฒนาผู้เรียน", project: "โครงการกิจกรรมพัฒนาผู้เรียนและทัศนศึกษา", responsible: "ครูวิชาการ", title: "กิจกรรมค่ายวิชาการ", amount: 7600, note: "" }
+      { id: 1, date: "2025-10-10", docType: "บค", docNo: "01/69", category: "ค่าอุปกรณ์การเรียน", project: "โครงการสนับสนุนค่าใช้จ่ายในการจัดการศึกษาขั้นพื้นฐาน (เรียนฟรี 15 ปี)", responsible: "ครูปฐมวัย", recordedBy: "ครูการเงิน", title: "จัดซื้ออุปกรณ์การเรียน ปฐมวัย", amount: 220, note: "เบิกจ่ายงวด 1" },
+      { id: 2, date: "2025-10-22", docType: "บค", docNo: "02/69", category: "ค่ากิจกรรมพัฒนาผู้เรียน", project: "โครงการกิจกรรมพัฒนาผู้เรียนและทัศนศึกษา", responsible: "ครูวิชาการ", recordedBy: "ครูการเงิน", title: "กิจกรรมค่ายวิชาการ", amount: 7600, note: "" }
     ];
 
     const DEFAULT_INFLOWS = [
-      { id: 101, date: "2025-10-01", docType: "นส", docNo: "ศธ 04055/124", category: "ค่าจัดการเรียนการสอน", title: "เงินจัดสรรอุดหนุนรายหัว งวดที่ 1", amount: 150000, note: "สพป." }
+      { id: 101, date: "2025-10-01", docType: "นส", docNo: "ศธ 04055/124", category: "ค่าจัดการเรียนการสอน", title: "เงินจัดสรรอุดหนุนรายหัว งวดที่ 1", recordedBy: "ครูการเงิน", amount: 150000, note: "สพป." }
     ];
 
     let baseBudgets = JSON.parse(localStorage.getItem('budget_allocation')) || DEFAULT_BASE_BUDGETS;
@@ -722,6 +818,12 @@
 
       const expResp = document.getElementById('expResponsible');
       if (expResp) expResp.innerHTML = teachers.map(t => `<option value="${t}">${t}</option>`).join('');
+
+      const expRec = document.getElementById('expRecordedBy');
+      const infRec = document.getElementById('inflowRecordedBy');
+      const recOptions = teachers.map(t => `<option value="${t}">${t}</option>`).join('');
+      if (expRec) expRec.innerHTML = recOptions;
+      if (infRec) infRec.innerHTML = recOptions;
 
       const expProj = document.getElementById('expProject');
       if (expProj) expProj.innerHTML = projects.map(p => `<option value="${p}">${p}</option>`).join('');
@@ -824,6 +926,7 @@
         category: document.getElementById('expCategory').value,
         project: document.getElementById('expProject').value,
         responsible: document.getElementById('expResponsible').value,
+        recordedBy: document.getElementById('expRecordedBy').value,
         title: document.getElementById('expTitle').value,
         amount: parseFloat(document.getElementById('expAmount').value) || 0,
         note: document.getElementById('expNote').value
@@ -853,6 +956,7 @@
         docType: document.getElementById('inflowDocType').value,
         docNo: document.getElementById('inflowDocNo').value.trim(),
         category: document.getElementById('inflowCategory').value,
+        recordedBy: document.getElementById('inflowRecordedBy').value,
         title: document.getElementById('inflowTitle').value,
         amount: parseFloat(document.getElementById('inflowAmount').value) || 0,
         note: document.getElementById('inflowNote').value
@@ -884,7 +988,7 @@
       `;
     }
 
-    // ================= ฟังก์ชันรายงานสรุปรายเดือน/ปี =================
+    // ================= ฟังก์ชันรายงานสรุป =================
     const THAI_MONTHS = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
 
     function openReportModal() {
@@ -918,7 +1022,7 @@
       let filteredInflows = [];
 
       if (periodType === 'MONTHLY') {
-        const monthVal = document.getElementById('reportMonthInput').value; // เช่น "2025-10"
+        const monthVal = document.getElementById('reportMonthInput').value;
         if (!monthVal) {
           headerSubtitle.textContent = 'กรุณาเลือกเดือน';
           return;
@@ -1056,7 +1160,9 @@
         const filtered = transactions.filter(t => {
           const matchCat = filterCat === 'ALL' || t.category === filterCat;
           const matchSearch = (t.title && t.title.toLowerCase().includes(search)) || 
-                              (t.note && t.note.toLowerCase().includes(search));
+                              (t.note && t.note.toLowerCase().includes(search)) ||
+                              (t.responsible && t.responsible.toLowerCase().includes(search)) ||
+                              (t.recordedBy && t.recordedBy.toLowerCase().includes(search));
           return matchCat && matchSearch;
         });
 
@@ -1070,9 +1176,14 @@
               <td class="py-2 px-2.5 font-medium text-indigo-700 whitespace-nowrap"><span class="bg-indigo-50 px-2 py-0.5 rounded text-[11px]">${t.category}</span></td>
               <td class="py-2 px-2.5">
                 <div class="font-medium text-slate-800">${t.title}</div>
+                <div class="text-[10px] text-slate-500 flex flex-wrap gap-1.5 mt-0.5">
+                  ${t.project ? `<span class="bg-slate-100 px-1.5 rounded">📂 ${t.project}</span>` : ''}
+                  ${t.responsible ? `<span class="text-indigo-600">👤 ผู้รับผิดชอบ: ${t.responsible}</span>` : ''}
+                  ${t.recordedBy ? `<span class="text-emerald-700">✍️ ผู้กรอก: ${t.recordedBy}</span>` : ''}
+                </div>
               </td>
-              <td class="py-2 px-2.5 text-right font-semibold text-amber-700 whitespace-nowrap">-${formatNumber(t.amount)}</td>
-              <td class="py-2 px-2 text-center whitespace-nowrap">
+              <td class="py-2.5 px-2.5 text-right font-semibold text-amber-700 whitespace-nowrap">-${formatNumber(t.amount)}</td>
+              <td class="py-2.5 px-2 text-center whitespace-nowrap">
                 <button onclick="deleteTransaction(${t.id})" class="text-rose-500 hover:text-rose-700 p-1 font-bold">✕</button>
               </td>
             </tr>
@@ -1081,7 +1192,8 @@
       } else {
         const filteredInflows = inflows.filter(inf => {
           const matchCat = filterCat === 'ALL' || inf.category === filterCat;
-          const matchSearch = inf.title && inf.title.toLowerCase().includes(search);
+          const matchSearch = (inf.title && inf.title.toLowerCase().includes(search)) ||
+                              (inf.recordedBy && inf.recordedBy.toLowerCase().includes(search));
           return matchCat && matchSearch;
         });
 
@@ -1095,6 +1207,10 @@
               <td class="py-2.5 px-2.5 font-medium text-emerald-700 whitespace-nowrap"><span class="bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded text-[11px]">${inf.category}</span></td>
               <td class="py-2.5 px-2.5">
                 <div class="font-medium text-slate-800">${inf.title}</div>
+                <div class="text-[10px] text-slate-500 flex flex-wrap gap-1.5 mt-0.5">
+                  ${inf.note ? `<span>ที่มา: ${inf.note}</span>` : ''}
+                  ${inf.recordedBy ? `<span class="text-emerald-700">✍️ ผู้กรอก: ${inf.recordedBy}</span>` : ''}
+                </div>
               </td>
               <td class="py-2.5 px-2.5 text-right font-semibold text-emerald-600 whitespace-nowrap">+${formatNumber(inf.amount)}</td>
               <td class="py-2.5 px-2 text-center whitespace-nowrap">
@@ -1133,7 +1249,6 @@
       const budgetData = labels.map(c => catBudgets[c] || 0);
       const spentData = labels.map(c => catSpent[c] || 0);
 
-      // Bar Chart
       const ctxBar = document.getElementById('budgetChart')?.getContext('2d');
       if (ctxBar) {
         if (chartInstance) chartInstance.destroy();
@@ -1172,7 +1287,6 @@
         });
       }
 
-      // Donut Chart
       const ctxDonut = document.getElementById('expenseDonutChart')?.getContext('2d');
       if (ctxDonut) {
         if (donutChartInstance) donutChartInstance.destroy();
@@ -1197,7 +1311,6 @@
         });
       }
 
-      // Line Chart
       const ctxLine = document.getElementById('trendLineChart')?.getContext('2d');
       if (ctxLine) {
         if (lineChartInstance) lineChartInstance.destroy();
@@ -1251,9 +1364,9 @@
     }
 
     function exportCurrentViewCSV() {
-      let csvContent = "\uFEFFลำดับ,ประเภท,วันที่,ประเภทเอกสาร,เลขที่เอกสาร,หมวดงบ,รายการ,จำนวนเงิน,หมายเหตุ\n";
+      let csvContent = "\uFEFFลำดับ,ประเภท,วันที่,ประเภทเอกสาร,เลขที่เอกสาร,หมวดงบ,รายการ,ผู้รับผิดชอบ,ผู้กรอกข้อมูล,จำนวนเงิน,หมายเหตุ\n";
       transactions.forEach((t, i) => {
-        csvContent += `${i + 1},"เบิกจ่าย","${t.date}","${t.docType}","${t.docNo}","${t.category}","${t.title}",-${t.amount},"${t.note}"\n`;
+        csvContent += `${i + 1},"เบิกจ่าย","${t.date}","${t.docType}","${t.docNo}","${t.category}","${t.title}","${t.responsible || ''}","${t.recordedBy || ''}",-${t.amount},"${t.note}"\n`;
       });
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
